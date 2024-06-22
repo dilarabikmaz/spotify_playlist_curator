@@ -6,6 +6,7 @@ from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
 from spotipy.cache_handler import FlaskSessionCacheHandler
 from tenacity import retry, wait_exponential, stop_after_attempt
+from spotipy.client import SpotifyException
 
 
 app = Flask(__name__)
@@ -26,7 +27,7 @@ sp_oauth = SpotifyOAuth(
     show_dialog=True # for debugging puposes
 )
 # create an instance of Spotify Client
-sp = Spotify(auth_manager=sp_oauth)
+sp = Spotify(auth_manager=sp_oauth, requests_timeout=30)
 
 @app.route('/')
 def home():
@@ -113,36 +114,42 @@ def main():
 
 @app.route('/loading')
 def loading():
-    
-    keywords = request.args.get('keywords').split(',')
-    playlist_public = request.args.get('public')
+    try:
+        keywords = request.args.get('keywords').split(',')
+        playlist_public = request.args.get('public')
 
-    token_info = cache_handler.get_cached_token()
-    if not token_info:
-        auth_url = sp_oauth.get_authorize_url()
-        return redirect(auth_url)
-    
-    filtered_songs = []
+        token_info = cache_handler.get_cached_token()
+        if not token_info:
+            auth_url = sp_oauth.get_authorize_url()
+            return redirect(auth_url)
+        
+        filtered_songs = []
 
-    token = token_info['access_token']
-    user_id = Spotify(auth=token).current_user()['id']
+        token = token_info['access_token']
+        user_id = Spotify(auth=token).current_user()['id']
 
-    all_liked_songs = get_liked_songs()
-    print(f"Liked songs: {all_liked_songs}")  # Debugging statement
-    filtered_songs = filter_songs_by_keywords(all_liked_songs, keywords)
-    
-    if filtered_songs:
-        playlist_name = "Filtered Songs Playlist"
-        playlist_description = "A playlist created from your liked songs based on your keywords."
-        playlist = create_playlist(token, user_id, playlist_name, playlist_description, playlist_public)
-        playlist_id = playlist['id']
+        all_liked_songs = get_liked_songs()
+        print(f"Liked songs: {all_liked_songs}")  # Debugging statement
+        filtered_songs = filter_songs_by_keywords(all_liked_songs, keywords)
+        
+        if filtered_songs:
+            playlist_name = "Filtered Songs Playlist"
+            playlist_description = "A playlist created from your liked songs based on your keywords."
+            playlist = create_playlist(token, user_id, playlist_name, playlist_description, playlist_public)
+            playlist_id = playlist['id']
 
-        track_uris = [song['track']['uri'] for song in filtered_songs]
-        add_songs_to_playlist(token, playlist_id, track_uris)
+            track_uris = [song['track']['uri'] for song in filtered_songs]
+            add_songs_to_playlist(token, playlist_id, track_uris)
 
-        return f"Playlist '{playlist_name}' created with {len(filtered_songs)} songs."
-    else:
-        return "No songs found matching the given keywords."
+            # Get playlist cover image URL
+            playlist_details = sp.playlist(playlist_id)
+            cover_image_url = playlist_details['images'][0]['url'] if playlist_details['images'] else None
+
+            return render_template('playlist_preview.html', playlist_name=playlist_name, songs=filtered_songs, cover_image_url=cover_image_url)
+        else:
+            return render_template('error.html')
+    except SpotifyException as e:
+        return f"An error occurred: {e}"
 
 @app.route('/callback')
 def callback():
@@ -153,29 +160,6 @@ def get_liked_songs():
     if not sp_oauth.validate_token(cache_handler.get_cached_token()):
         auth_url = sp_oauth.get_authorize_url()
         return redirect(auth_url)
-    # liked_songs = sp.current_user_saved_tracks()
-    # songs_info = [song['track']['name'] for song in liked_songs['items']]
-    # songs_html = '<br>'.join(songs_info)
-
-    # return songs_html
-
-    # token_info = sp_oauth.get_cached_token()
-    # if not token_info:
-    #     auth_url = sp_oauth.get_authorize_url()
-    #     return redirect(auth_url)
-
-    # sp = Spotify(auth=token_info['access_token'])
-
-    # liked_songs = []
-    # results = sp.current_user_saved_tracks(limit=50)
-    # liked_songs.extend(results['items'])
-    # while results['next']:
-    #     results = sp.next(results)
-    #     liked_songs.extend(results['items'])
-    
-    # songs_info = [song['track']['name'] for song in liked_songs['items']]
-    # songs_html = '<br>'.join(songs_info)
-    # return songs_html
 
     liked_songs = []
     results = sp.current_user_saved_tracks(limit=50)
