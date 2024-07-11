@@ -102,6 +102,7 @@ spotify-liked-songs-web-app/
 │
 ├── main.py # Main Flask application
 ├── requirements.txt # Python dependencies
+├── templates # HTML templates folder
 └── README.md # Project README
 ```
 
