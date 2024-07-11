@@ -97,11 +97,13 @@ This web application allows users to log in with their Spotify account and have 
 - You can log out by visiting the `/logout` endpoint.
 
 ## Project Structure
+```
 spotify-liked-songs-web-app/
 │
 ├── app.py # Main Flask application
 ├── requirements.txt # Python dependencies
 └── README.md # Project README
+```
 
 ## License
 
