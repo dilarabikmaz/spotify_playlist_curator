@@ -105,10 +105,6 @@ spotify-liked-songs-web-app/
 └── README.md # Project README
 ```
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
 ## Acknowledgements
 
 - [Flask](https://flask.palletsprojects.com/)
