@@ -96,6 +96,20 @@ This web application allows users to log in with their Spotify account and have 
 - Check out a preview of your brand new playlist once it is created!
 - You can log out by visiting the `/logout` endpoint.
 
+## Demo
+
+### Home Page
+
+![Home Page](images/home_page.png)
+
+### Login Page
+
+![Login Page](images/login_page.png)
+
+### Playlist Preview Page
+
+![Playlist Preview Page](images/playlist_preview.png)
+
 ## Project Structure
 ```
 spotify-liked-songs-web-app/
