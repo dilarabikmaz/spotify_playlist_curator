@@ -66,14 +66,14 @@ This web application allows users to log in with their Spotify account and have 
 1. **Run the Flask application:**
 
     ```bash
-    export FLASK_APP=app.py
+    export FLASK_APP=main.py
     flask run
     ```
 
     On Windows, use:
 
     ```bash
-    set FLASK_APP=app.py
+    set FLASK_APP=main.py
     flask run
     ```
 
@@ -100,7 +100,7 @@ This web application allows users to log in with their Spotify account and have 
 ```
 spotify-liked-songs-web-app/
 │
-├── app.py # Main Flask application
+├── main.py # Main Flask application
 ├── requirements.txt # Python dependencies
 └── README.md # Project README
 ```
