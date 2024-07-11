@@ -91,7 +91,7 @@ This web application allows users to log in with their Spotify account and have 
 ## Usage
 
 - Visit the home page to log in with your Spotify account.
-- After logging in, you will be redirected to the page prompting you to enter keywords.
+- After logging in, you will be redirected to the page prompting you to enter keywords and choose whether you want your playlist to be public or not.
 - Wait a couple seconds for the app to curate your playlist based on your keywords.
 - Check out a preview of your brand new playlist once it is created!
 - You can log out by visiting the `/logout` endpoint.
