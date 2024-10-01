@@ -127,4 +127,4 @@ spotify-liked-songs-web-app/
 
 ## Contact
 
-If you have any questions or suggestions, feel free to contact me at [handandilara.bikmaz@yale.edu](mailto:handandilara.bikmaz@yale.edu).
+If you have any questions or suggestions, feel free to contact us at [handandilara.bikmaz@yale.edu](mailto:handandilara.bikmaz@yale.edu) and [mkundakc@andrew.cmu.edu](mailto:mkundakc@andrew.cmu.edu).
